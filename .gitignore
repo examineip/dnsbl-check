@@ -1,0 +1,6 @@
+# Local test output and editor files
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

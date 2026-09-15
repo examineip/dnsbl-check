@@ -1,0 +1,25 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['7.4', '8.1', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Syntax check
+        run: php -l dnsbl-check.php && php -l tests/interpret-test.php
+      - name: Offline tests
+        run: php tests/interpret-test.php
+      - name: Live lookup (informational)
+        continue-on-error: true
+        run: php dnsbl-check.php 8.8.8.8 || test $? -eq 1
